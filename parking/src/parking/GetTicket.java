@@ -53,6 +53,15 @@ public class GetTicket extends HttpServlet {
 		
 		//Checking the condition and updating the start time and end time based on amount.
 		
+		if(varAmount<1.5){
+			
+			String message = "Minum amount is $1.5";
+			request.setAttribute("message", message);
+			request.getRequestDispatcher("/HomePage.jsp").forward(request, response);
+			
+			
+		}
+		
 		if(varAmount>=1.5 && varAmount<3){
 			
 		objgetset.setHrsrequest(1); // If the user amount is between 1.5 and 3 then hrs is set as 1hr.
@@ -70,6 +79,13 @@ public class GetTicket extends HttpServlet {
 	    objgetset.setParkingEndTime(endtime); // Setting the end time in getter and setter class.
 	    
 	    request.setAttribute("value", timeout);
+	    try {
+			DBManager.issueTicket(objgetset); //calling the issue ticket function in DBManager class and passing getter setter "objgetset"
+			//to that function. 
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	   	   
 	        
 				
@@ -89,17 +105,19 @@ public class GetTicket extends HttpServlet {
 		    objgetset.setParkingEndTime(endtime);
 		    
 		    request.setAttribute("value", timeout);
+		    
+		    try {
+				DBManager.issueTicket(objgetset); //calling the issue ticket function in DBManager class and passing getter setter "objgetset"
+				//to that function. 
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		 
 			}
 		
-														
-		try {
-			DBManager.issueTicket(objgetset); //calling the issue ticket function in DBManager class and passing getter setter "objgetset"
-			//to that function. 
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+													
+		
 		
 		/*boolean timeout=false;
 		HttpSession session = request.getSession();

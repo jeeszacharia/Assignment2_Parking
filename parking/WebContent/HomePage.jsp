@@ -33,10 +33,15 @@ function timer() {
     }
     
     document.getElementById('demo').innerHTML = days + "day " + hours + "hrs " + minutes + "minute " + remainingSeconds+ "seconds";
-    if (seconds == 0) {
-        clearInterval(countdownTimer);
-        document.getElementById('demo').innerHTML = "Completed";
-    } else {
+    if (seconds == 900) {
+        //clearInterval(countdownTimer);
+        window.alert("You have only 15 Seconds Leftout!You need to renew your Ticket ");
+        //document.getElementById('demo').innerHTML = "Completed";
+    }if(seconds == 0){
+    	window.alert("Your Time is UP!!!!!!!!!!!! ");
+    	clearInterval(countdownTimer);
+    }
+    else {
         seconds--;
     }
 }
@@ -55,11 +60,8 @@ if(session.getAttribute("username")==null){
 }
 %>
 
-
    Welcome ${username}
-   
-
-   
+  
     
    <form method="get" action="Logout">
    <table>
@@ -78,7 +80,7 @@ if(session.getAttribute("username")==null){
 <table>
 </table>
 
-<p style ="color:Green"> Message: ${message}</p> 
+<p style ="color:Red"> Message: ${message}</p> 
 
  <table>
           

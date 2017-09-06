@@ -12,7 +12,7 @@
 
 <script>
 //Place here the total of seconds you receive on your PHP code. ie: var initialTime = <? echo $remaining; ?>;
-var initialTime = 7200;
+var initialTime = 30;
 
 var seconds = initialTime;
 function timer() {
@@ -26,11 +26,18 @@ function timer() {
         remainingSeconds = "0" + remainingSeconds; 
     }
     document.getElementById('demo').innerHTML = days + "day " + hours + "hrs " + minutes + "minute " + remainingSeconds+ "seconds";
-    if (seconds == 0) {
-        clearInterval(countdownTimer);
-        document.getElementById('demo').innerHTML = "Completed";
-    } else {
+    if (seconds == 15) {
+        //clearInterval(countdownTimer);
+        window.alert("You have only 15 Seconds Leftout!You need to renew your Ticket ");
+        //document.getElementById('demo').innerHTML = "Completed";
+       // seconds--;
+    } if(seconds == 0){
+    	 window.alert("Your Time is UP ");
+    	clearInterval(countdownTimer);
+    	
+    }else {
         seconds--;
+    	//clearInterval(countdownTimer);
     }
 }
 var countdownTimer = setInterval('timer()', 1000);
