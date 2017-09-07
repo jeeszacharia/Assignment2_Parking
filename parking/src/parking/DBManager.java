@@ -70,7 +70,7 @@ public static int issueTicket(GetterSetter sets) throws ParseException {
 	
 	//String sqlQuery=("INSERT INTO parking.ticketissue (registrationID,dateofParking,time,Hoursrequested,parkingendtime,Amount) VALUES(?,2017-09-01,?,?,?)");
 	
-	String sqlQuery=("INSERT INTO parking.ticketissue (registrationID,dateofParking,starttime,Hoursrequested,endtimestamp,Amount) VALUES(?,?,?,?,?,?)");
+	String sqlQuery=("INSERT INTO parking.ticketissue (registrationID,dateofParking,starttime,Hoursrequested,endtimestamp,Amount,parkingStatus) VALUES(?,?,?,?,?,?,1)");
 	PreparedStatement prepstmt = conn.prepareStatement(sqlQuery);
 	
 	

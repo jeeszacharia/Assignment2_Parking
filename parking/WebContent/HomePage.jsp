@@ -11,11 +11,11 @@
 
 <% int value = (Integer) request.getAttribute("timeout"); %>
 
-
+<p id="demo"></p>
 
 <script>
 //Place here the total of seconds you receive on your JSP code. ie: var initialTime = <? echo $remaining; ?>;
-<p id="demo"></p>
+
 
 var initialTime = '${value}';
 
