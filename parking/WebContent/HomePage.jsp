@@ -72,6 +72,15 @@ if(session.getAttribute("username")==null){
    </table>
    </form>
    
+   <form method="post" action="TicketDetails">
+   <table>
+   <tr>
+          <td></td>
+          <td><input type="submit" value="Ticket"> </td>
+     </tr>
+   </table>
+   </form>
+   
 
 <form method="post" action="GetTicket">
   <h2>Registration</h2>

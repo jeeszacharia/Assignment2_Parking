@@ -30,7 +30,10 @@ public class GetterSetter {
 		this.parkingEndTime = parkingEndTime;
 	}
 	public double getHrsrequest() {
+		
+		System.out.println("Hrsreturning"+hrsrequest);
 		return hrsrequest;
+		
 	}
 	public Timestamp getStarttime() {
 		return starttime;
@@ -39,7 +42,9 @@ public class GetterSetter {
 		this.starttime = starttime;
 	}
 	public void setHrsrequest(double hrsrequest) {
+		
 		this.hrsrequest = hrsrequest;
+		System.out.println("Hrs Requested"+this.hrsrequest);
 	}
 	public double getAmount() {
 		return Amount;

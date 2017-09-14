@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 public class DBManager {
 	
@@ -70,7 +71,7 @@ public static int issueTicket(GetterSetter sets) throws ParseException {
 	
 	//String sqlQuery=("INSERT INTO parking.ticketissue (registrationID,dateofParking,time,Hoursrequested,parkingendtime,Amount) VALUES(?,2017-09-01,?,?,?)");
 	
-	String sqlQuery=("INSERT INTO parking.ticketissue (registrationID,dateofParking,starttime,Hoursrequested,endtimestamp,Amount,parkingStatus) VALUES(?,?,?,?,?,?,1)");
+	String sqlQuery=("INSERT INTO parking.ticketissue (registrationID,dateofParking,starttime,Hoursrequested,endtimestamp,Amount,parkingStatus) SELECT ?,?,?,?,?,?,1 FROM dual WHERE (SELECT COUNT(*) as parkingStatus FROM parking.ticketissue WHERE parkingStatus=1)<10");
 	PreparedStatement prepstmt = conn.prepareStatement(sqlQuery);
 	
 	
@@ -87,7 +88,6 @@ public static int issueTicket(GetterSetter sets) throws ParseException {
 		e.printStackTrace();
 	}
 	
-		
 	ConnectionManager.getInstance().closeConnection();
 	return count;
 	
@@ -95,56 +95,6 @@ public static int issueTicket(GetterSetter sets) throws ParseException {
 
 
 //************************
-
-//*************Check the Time difference and print*********
-
-/*public static boolean getLeftoutTime(GetterSetter sets){
-	
-	Connection conn= ConnectionManager.getInstance().getConnection();
-	ResultSet myresultset;
-	boolean timeout=false;
-	try{
-		
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		String sqlQuery=("SELECT parking.registration.Name,parking.ticketissue.endtimestamp FROM parking.registration INNER JOIN parking.ticketissue ON registration.registrationID=11");
-
-		PreparedStatement prepstmt = conn.prepareStatement(sqlQuery);
-		
-		myresultset=prepstmt.executeQuery();
-		while(myresultset.next()){
-			
-			java.util.Date date=new java.util.Date();
-		  	java.sql.Timestamp sqlTime=new java.sql.Timestamp(date.getTime());
-		  	
-		  	//if(myresultset.getTimestamp("endtimestamp").equals(sqlTime.getTime()) && sets.getSession().equals(anObject)))){
-		  	if(myresultset.getString("name").equals(sets.getSession())){
-		  		
-		  		timeout=true;
-		  		
-		  		System.out.println("Alert User");
-		  	}
-		  	  													
-			}
-			
-		}catch(Exception exc){
-			exc.printStackTrace();
-			
-		}
-			
-	ConnectionManager.getInstance().closeConnection();
-	return false;
-	
-	}*/
-
-//*************Check the Time difference and print*********
-
 
 public static boolean checklogin(GetterSetter sets){
 	Connection conn= ConnectionManager.getInstance().getConnection();
@@ -191,6 +141,67 @@ public static boolean checklogin(GetterSetter sets){
 		
 			
 	}
+
+//***************DISPLAY TICKET DETAILS***************
+@SuppressWarnings({ "unchecked", "rawtypes" })
+public static ArrayList getTicketDetails(GetterSetter sets){
+	Connection conn= ConnectionManager.getInstance().getConnection();
+	ResultSet myresultset;
+	@SuppressWarnings("rawtypes")
+	ArrayList currentticketDetails=new ArrayList();
+		
+	try{
+		
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String sqlQuery=("SELECT TicketID,registrationID,dateofParking,Hoursrequested,Amount FROM  parking.ticketissue WHERE registrationID=10 and parkingStatus= 1");
+
+		PreparedStatement prepstmt = conn.prepareStatement(sqlQuery);
+		
+		//prepstmt.setInt(1,sets.getRegID());
+		
+		myresultset=prepstmt.executeQuery();
+		
+		while(myresultset.next()){
+			
+			//String  S = new SimpleDateFormat("HH:mm:ss");
+			
+			currentticketDetails.add(myresultset.getInt("TicketID"));
+			currentticketDetails.add(myresultset.getInt("registrationID"));
+			currentticketDetails.add(myresultset.getDate("dateofParking"));
+			currentticketDetails.add(myresultset.getDouble("Amount"));
+			//currentticketDetails.add(S.format(myresultset.getTimestamp("endtimestamp")));
+			//currentticketDetails.add(S.format(myresultset.getTimestamp("starttime")));
+			return currentticketDetails;					
+			}
+			
+		}catch(Exception exc){
+			exc.printStackTrace();
+			
+		}
+	
+			
+	ConnectionManager.getInstance().closeConnection();
+	//return loginSuccess;
+	return currentticketDetails;
+		
+			
+	}
+
+
+
+//***************DISPLAY TICKET DETAILS END****************
+
+
+
+
+
 	
 
 }

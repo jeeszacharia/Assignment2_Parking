@@ -2,6 +2,7 @@ package parking;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,13 +36,16 @@ public class GetTicket extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@SuppressWarnings("rawtypes")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 		
+		int ticketIssueStatus=0;
 		 	
 		// creating an object of getterSetter class to assign value to retrieve it DBmanager class for better management		
 		GetterSetter objgetset= new GetterSetter();
+		Timecalculation objtimeCal=new Timecalculation();
 		
 		//Getting the field value from jsp page
 		double varAmount =Double.parseDouble(request.getParameter("Amount"));
@@ -50,23 +54,25 @@ public class GetTicket extends HttpServlet {
 		objgetset.setRegID(varRegID);
 		objgetset.setAmount(varAmount);
 		
-		
+		//objtimeCal.CalculateTime(objgetset);		
 		//Checking the condition and updating the start time and end time based on amount.
+		System.out.println("Print hrs"+objgetset.getHrsrequest());
 		
 		if(varAmount<1.5){
 			
 			String message = "Minum amount is $1.5";
 			request.setAttribute("message", message);
 			request.getRequestDispatcher("/HomePage.jsp").forward(request, response);
-			
-			
+					
 		}
 		
-		if(varAmount>=1.5 && varAmount<3){
+		if(varAmount>=1.5&& varAmount<3 ){
+			
+			System.out.println("Inside GetTicketServlet");
 			
 		objgetset.setHrsrequest(1); // If the user amount is between 1.5 and 3 then hrs is set as 1hr.
 		
-		int timeout=3600;
+		int timeout=3600; // 1 hrs time set to display the counter
 				
 						
 		java.util.Date date=new java.util.Date(); //this and below line is to get the current SQl time 
@@ -78,22 +84,44 @@ public class GetTicket extends HttpServlet {
 		
 	    objgetset.setParkingEndTime(endtime); // Setting the end time in getter and setter class.
 	    
-	    request.setAttribute("value", timeout);
+	   
 	    try {
-			DBManager.issueTicket(objgetset); //calling the issue ticket function in DBManager class and passing getter setter "objgetset"
+	    	ticketIssueStatus=DBManager.issueTicket(objgetset); //calling the issue ticket function in DBManager class and passing getter setter "objgetset"
 			//to that function. 
+	    	if(ticketIssueStatus==0){
+	    		
+	    		String message = "Parking is Full Sorry!";
+				request.setAttribute("message", message);
+				request.getRequestDispatcher("/HomePage.jsp").forward(request, response);
+	    		    		
+	    	}else{
+	    		
+	    		 request.setAttribute("value", timeout);//Setting timeout value for the counter in ParkingDetails.jsp
+	    		 ArrayList arr=DBManager.getTicketDetails(objgetset);
+	    		 
+	    		 for(int i=0;i<=arr.size();i++){
+	    			 
+	    			 System.out.println("values"+arr);
+	    		 }
+	    		 
+	    		 request.setAttribute("Detail", arr);
+	    		 
+	    		 request.getRequestDispatcher("/HomePage.jsp").forward(request, response);
+	    		
+	    		//request.getRequestDispatcher("/ParkingDetails.jsp").forward(request, response);
+	    	}
+	    	
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
-		}
+		 }
 	   	   
-	        
-				
-		}
+	   }
 		// Same comment as above for this scenario also.
 		
 		if(varAmount>=3){
-			objgetset.setHrsrequest(2);
+			
+		objgetset.setHrsrequest(2);
 			
 			int timeout=7200;
 			
@@ -107,7 +135,21 @@ public class GetTicket extends HttpServlet {
 		    request.setAttribute("value", timeout);
 		    
 		    try {
-				DBManager.issueTicket(objgetset); //calling the issue ticket function in DBManager class and passing getter setter "objgetset"
+		    	ticketIssueStatus=DBManager.issueTicket(objgetset); //calling the issue ticket function in DBManager class and passing getter setter "objgetset"
+		    	
+		    	if(ticketIssueStatus==0){
+		    		
+		    		String message = "Parking is Full Sorry!";
+					request.setAttribute("message", message);
+					request.getRequestDispatcher("/HomePage.jsp").forward(request, response);
+		    		    		
+		    	}else{
+		    		
+		    		 request.setAttribute("value", timeout);//Setting timeout value for the counter in ParkingDetails.jsp
+		    		request.getRequestDispatcher("/HomePage.jsp").forward(request, response);
+		    	}
+		    	
+		    	
 				//to that function. 
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
