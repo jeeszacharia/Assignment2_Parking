@@ -4,12 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class DBManager {
 	
- 
+//***** New User Registration*********** 
 public static int insertNewuser(GetterSetter sets) {
 	
 	Connection conn= ConnectionManager.getInstance().getConnection();
@@ -48,7 +52,9 @@ public static int insertNewuser(GetterSetter sets) {
 	return count;
 	
 }
-//*******************
+//********New User Registration Ends***********
+
+//***********Issue Parking Ticket*************
 public static int issueTicket(GetterSetter sets) throws ParseException {
 	
 	Connection conn= ConnectionManager.getInstance().getConnection();
@@ -71,7 +77,7 @@ public static int issueTicket(GetterSetter sets) throws ParseException {
 	
 	//String sqlQuery=("INSERT INTO parking.ticketissue (registrationID,dateofParking,time,Hoursrequested,parkingendtime,Amount) VALUES(?,2017-09-01,?,?,?)");
 	
-	String sqlQuery=("INSERT INTO parking.ticketissue (registrationID,dateofParking,starttime,Hoursrequested,endtimestamp,Amount,parkingStatus) SELECT ?,?,?,?,?,?,1 FROM dual WHERE (SELECT COUNT(*) as parkingStatus FROM parking.ticketissue WHERE parkingStatus=1)<10");
+	String sqlQuery=("INSERT INTO parking.ticketissue1 (registrationID,dateofParking,starttime,Hoursrequested,endtimestamp,Amount,parkingStatus) SELECT ?,?,?,?,?,?,1 FROM dual WHERE (SELECT COUNT(*) as parkingStatus FROM parking.ticketissue1 WHERE parkingStatus=1)<10");
 	PreparedStatement prepstmt = conn.prepareStatement(sqlQuery);
 	
 	
@@ -92,9 +98,11 @@ public static int issueTicket(GetterSetter sets) throws ParseException {
 	return count;
 	
 }
+//***********Issue Parking Ticket ENDS *************
 
 
-//************************
+
+//********** Login Validation Starts**************
 
 public static boolean checklogin(GetterSetter sets){
 	Connection conn= ConnectionManager.getInstance().getConnection();
@@ -142,9 +150,14 @@ public static boolean checklogin(GetterSetter sets){
 			
 	}
 
+//********** Login Validation Ends**************
+
 //***************DISPLAY TICKET DETAILS***************
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public static ArrayList getTicketDetails(GetterSetter sets){
+	
+	java.text.SimpleDateFormat Sdf = new java.text.SimpleDateFormat("HH:mm:ss");
+	
 	Connection conn= ConnectionManager.getInstance().getConnection();
 	ResultSet myresultset;
 	@SuppressWarnings("rawtypes")
@@ -156,11 +169,73 @@ public static ArrayList getTicketDetails(GetterSetter sets){
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+		}
+		
+		String sqlQuery=("SELECT TicketID,registrationID,dateofParking,Amount,endtimestamp FROM  parking.ticketissue1 WHERE registrationID=? and parkingStatus= 1");
+
+		PreparedStatement prepstmt = conn.prepareStatement(sqlQuery);
+				
+		
+		prepstmt.setInt(1,sets.getRegID());
+		
+		myresultset=prepstmt.executeQuery();
+		
+		while(myresultset.next()){
+			
+			
+			
+			currentticketDetails.add(myresultset.getInt("TicketID"));
+			currentticketDetails.add(myresultset.getInt("registrationID"));
+			currentticketDetails.add(myresultset.getDate("dateofParking"));
+			currentticketDetails.add(myresultset.getDouble("Amount"));
+			java.sql.Timestamp ts= myresultset.getTimestamp("endtimestamp");
+			
+			String abc = Sdf.format(ts);
+			currentticketDetails.add(abc);
+			
+					
+			return currentticketDetails;					
+			}
+			
+		}catch(Exception exc){
+			exc.printStackTrace();
+			
+		}
+				
+	ConnectionManager.getInstance().closeConnection();
+	
+	return currentticketDetails;
+		
+			
+	}
+
+
+//***************DISPLAY TICKET DETAILS END****************
+
+
+
+//*************Get Available Parking Slots Starts****************
+
+public static int getAvailableParking(){
+	
+	Connection conn= ConnectionManager.getInstance().getConnection();
+	ResultSet myresultset;
+	int slotcount = 0;
+		
+		
+	try{
+		
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		String sqlQuery=("SELECT TicketID,registrationID,dateofParking,Hoursrequested,Amount FROM  parking.ticketissue WHERE registrationID=10 and parkingStatus= 1");
+		String sqlQuery=("SELECT COUNT(*) as parkingStatus FROM parking.ticketissue1 WHERE parkingStatus=1;");
 
 		PreparedStatement prepstmt = conn.prepareStatement(sqlQuery);
 		
@@ -168,17 +243,12 @@ public static ArrayList getTicketDetails(GetterSetter sets){
 		
 		myresultset=prepstmt.executeQuery();
 		
-		while(myresultset.next()){
+				
+		if(myresultset.next()){
 			
-			//String  S = new SimpleDateFormat("HH:mm:ss");
-			
-			currentticketDetails.add(myresultset.getInt("TicketID"));
-			currentticketDetails.add(myresultset.getInt("registrationID"));
-			currentticketDetails.add(myresultset.getDate("dateofParking"));
-			currentticketDetails.add(myresultset.getDouble("Amount"));
-			//currentticketDetails.add(S.format(myresultset.getTimestamp("endtimestamp")));
-			//currentticketDetails.add(S.format(myresultset.getTimestamp("starttime")));
-			return currentticketDetails;					
+			slotcount=myresultset.getInt("parkingStatus");	
+						
+							
 			}
 			
 		}catch(Exception exc){
@@ -188,18 +258,12 @@ public static ArrayList getTicketDetails(GetterSetter sets){
 	
 			
 	ConnectionManager.getInstance().closeConnection();
-	//return loginSuccess;
-	return currentticketDetails;
-		
-			
+	return slotcount;
+
 	}
 
 
-
-//***************DISPLAY TICKET DETAILS END****************
-
-
-
+//*************Get Available Parking Slots Ends****************
 
 
 	

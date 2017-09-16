@@ -12,10 +12,23 @@ public class GetterSetter {
 	private String Passowrd;
 	private int regID;
 	private double Amount;
+	private long userRequestMinute;
 	private double hrsrequest;
 	private Timestamp parkingEndTime;
 	private Timestamp starttime;
 	private String session;
+	
+	public long getUserRequestMinute() {
+		
+		System.out.println("user requested Minute Returning to Parking TIme class"+userRequestMinute);
+		return userRequestMinute;
+	}
+	public void setUserRequestMinute(long userRequestMinute) {
+		this.userRequestMinute = userRequestMinute;
+		System.out.println("User requested TIme"+this.userRequestMinute);
+		
+	}
+	
 			
 	public String getSession() {
 		return session;
@@ -31,7 +44,7 @@ public class GetterSetter {
 	}
 	public double getHrsrequest() {
 		
-		System.out.println("Hrsreturning"+hrsrequest);
+		System.out.println("Getter Sette class Hrsreturning"+hrsrequest);
 		return hrsrequest;
 		
 	}
@@ -44,7 +57,7 @@ public class GetterSetter {
 	public void setHrsrequest(double hrsrequest) {
 		
 		this.hrsrequest = hrsrequest;
-		System.out.println("Hrs Requested"+this.hrsrequest);
+		System.out.println("Getter Setter Hrs Requested"+this.hrsrequest);
 	}
 	public double getAmount() {
 		return Amount;

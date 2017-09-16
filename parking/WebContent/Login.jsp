@@ -12,12 +12,12 @@
 
 <form method="post" action="Login">
 
-  <h2>Registration</h2>
+  <h2>Login Page</h2>
 
 <table>
 
      <tr>
-          <td>VechileNo: </td>
+          <td>UserName: </td>
           <td><input type="text" name="uname"> </td>
      </tr>
 
@@ -40,5 +40,6 @@
      
 </table>
 </form>
+
 </body>
 </html>

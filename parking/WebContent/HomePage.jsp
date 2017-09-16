@@ -53,6 +53,18 @@ var countdownTimer = setInterval('timer()', 1000);
 
 <body>
 
+
+     
+   <c:forEach items="${arr}" var="arr">
+    <tr>
+       <td>"${arr}"</td>
+              
+     </tr>       
+    </c:forEach>
+  
+
+
+
 <%
 if(session.getAttribute("username")==null){
 	
@@ -81,7 +93,16 @@ if(session.getAttribute("username")==null){
    </table>
    </form>
    
-
+   <form method="post" action="AvailableParking">
+   <table>
+   <tr>
+          <td></td>
+          <td><input type="submit" value="Available Slots"> </td>
+     </tr>
+   </table>
+   </form>
+   
+  
 <form method="post" action="GetTicket">
   <h2>Registration</h2>
     
@@ -109,8 +130,8 @@ if(session.getAttribute("username")==null){
            </tr>
                                  
            <tr>
-          <td>Amount </td>
-          <td><input type="text" name="Amount"> </td>
+          <td>Minute </td>
+          <td><input type="text" name="Minute"> </td>
      </tr>
        <tr>
           <td>RegistrationID </td>

@@ -45,6 +45,8 @@ public class Login extends HttpServlet {
 		
 		String varUserName=request.getParameter("uname");
 		String varPassword=request.getParameter("password");
+		
+		
 		//setting the username value to getterSetter methods to authenticate from DBManager.check user function.
 		
 		objgetset.setUserName(varUserName);

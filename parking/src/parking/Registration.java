@@ -36,6 +36,7 @@ public class Registration extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		
 	
 		String varName=request.getParameter("name");
 		String varVehicleNumber=request.getParameter("vnumber");
@@ -54,7 +55,7 @@ public class Registration extends HttpServlet {
 			
 		int value=DBManager.insertNewuser(objgetset);
 			
-			if(value>1){
+			if(value==1){
 				String message = "Registration Successful";
 				request.setAttribute("", message);
 				request.getRequestDispatcher("/RegistrationPage.jsp").forward(request, response);
